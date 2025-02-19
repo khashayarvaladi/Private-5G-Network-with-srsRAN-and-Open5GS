@@ -170,26 +170,35 @@ Start and stop the 5G Core:
 5gc  # Start 5G Core
 stop_5gc  # Stop 5G Core
 ```
-##Sznarien for ipconfig
+## Scenarios for Network Interface Configuration
+
+### Check Current Network Interfaces
+
 ```bash
 ifconfig
 ```
- Scenario 1- OGSTUN interfae is not configured:
-Ensure that OGSTUN is configured
-observe no interface named ogstun
 
-1.sudo ip tuntap add name ogstun mode tun
-2.sudo ip addr add 10.45..0.1/16 dev ogstun
-3.sudo ip link set ogstun up
--------------------------------
+### Scenario 1: OGSTUN Interface is Not Configured
 
-Scenario 2-OGSTUN interface is with no IP Address
+If there is no OGSTUN interface, configure it:
 
-cd etc/open5gs/
+```bash
+sudo ip tuntap add name ogstun mode tun
 sudo ip addr add 10.45.0.1/16 dev ogstun
+sudo ip link set ogstun up
+```
 
-------------------------------------------
-Scenario 3 OGSTUN interface is configured with IP Address
+### Scenario 2: OGSTUN Interface Exists but Has No IP Address
+
+```bash
+cd /etc/open5gs/
+sudo ip addr add 10.45.0.1/16 dev ogstun
+```
+
+### Scenario 3: OGSTUN Interface is Configured with an IP Address
+
+Check again:
+
 ```bash
 ifconfig
 ```
