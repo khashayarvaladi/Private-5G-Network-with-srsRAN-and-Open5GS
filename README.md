@@ -1,7 +1,7 @@
 # Installing a 5G Private Network
 
 ## Install USRP UHD Driver
-
+I use USRP B210 as software define radio
 Update and install dependencies:
 
 [USRP UHD Driver Installation Guide](https://kb.ettus.com/Building_and_Installing_the_USRP_Open-Source_Toolchain_(UHD_and_GNU_Radio)_on_Linux)
