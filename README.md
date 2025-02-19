@@ -264,6 +264,7 @@ IPv4
 and save it
 ## copy gnb_n3.yml File to your srsran project path/config
 cd ~/srsRAN_Project/configs
+
 copy gnb_n3.yml
 
 ## Additional Steps and turn on Roaming on phone
