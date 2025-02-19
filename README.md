@@ -177,13 +177,17 @@ ifconfig
  Scenario 1- OGSTUN interfae is not configured:
 Ensure that OGSTUN is configured
 observe no interface named ogstun
+
 1.sudo ip tuntap add name ogstun mode tun
 2.sudo ip addr add 10.45..0.1/16 dev ogstun
 3.sudo ip link set ogstun up
 -------------------------------
+
 Scenario 2-OGSTUN interface is with no IP Address
+
 cd etc/open5gs/
 sudo ip addr add 10.45.0.1/16 dev ogstun
+
 ------------------------------------------
 Scenario 3 OGSTUN interface is configured with IP Address
 ```bash
