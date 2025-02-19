@@ -99,6 +99,7 @@ Check WebUI:
 ```
 localhost:9999
 Username: admin
+Password: 1423
 ```
 
 ## Stop and Start 5G Core
@@ -168,23 +169,50 @@ Start and stop the 5G Core:
 5gc  # Start 5G Core
 stop_5gc  # Stop 5G Core
 ```
+##Sznarien for ipconfig
+```bash
+ifconfig
+```
+ Scenario 1- OGSTUN interfae is not configured:
+Ensure that OGSTUN is configured
+observe no interface named ogstun
+1.sudo ip tuntap add name ogstun mode tun
+2.sudo ip addr add 10.45..0.1/16 dev ogstun
+3.sudo ip link set ogstun up
+-------------------------------
+Scenario 2-OGSTUN interface is with no IP Address
+cd etc/open5gs/
+sudo ip addr add 10.45.0.1/16 dev ogstun
+------------------------------------------
+Scenario 3 OGSTUN interface is configured with IP Address
+```bash
+ifconfig
+```
+-----------------------------
 
 ## Configure Open5GS
-
+##we need sure ip forwarding for IPV4 is enable(for data service)
 Set up IP forwarding:
 
 ```bash
+sudo sysctl -a | grep ip_forward
+if net.ipv4_forward = 0
 sudo sysctl -w net.ipv4.ip_forward=1
 ```
 
 Set up NAT forwarding:
+##Ensure that IP Table are configured  for NAT forwarding
 
+```bash
+sudo iptables -L -n -v -t nat
+```
+##if ogstun 10.45.0.1/15 is not displayed :
 ```bash
 sudo iptables -t nat -A POSTROUTING -s 10.45.0.0/16 ! -o ogstun -j MASQUERADE
 ```
 
 Configure `amf.yaml`, `smf.yaml`, and `upf.yaml`:
-
+##uncomment level logger,info and change it to debug
 ```bash
 cd /etc/open5gs
 sudo nano amf.yaml
@@ -203,8 +231,28 @@ Start the 5G core:
 ```bash
 5gc
 ```
+##now in oppen5gs WEBUI we should enter our IMSI(Simcart), OPC and Subscriber Key
+localhost:9999
+username: admin
+password :1423
+add subscriber : IMSI
+Key und OPC
+Session Configuration:
+DNN/APN:internet
+Typ
+e: IPV4
++
+ +
+PCC Rules
+ims
+IPv4
 
-## Additional Steps
+and save it
+## copy gnb_n3.yml File to your srsran project path/config
+cd ~/srsRAN_Project/configs
+copy gnb_n3.yml
+
+## Additional Steps and turn on Roaming on phone
 
 - Set APN on UE:
   - Name: Test Network
@@ -222,7 +270,19 @@ sudo tcpdump -i any -w 5gc.pcap
 ```bash
 sudo tail -f /var/log/open5gs/amf.yaml
 ```
+##Connect USRP B210 tp PC
+```bash
+cd /usr/lib/uhd/utils
+ls
+sudo ./query_gpsdo_sensors
+```
+you should now see  GPS and UHD Device time are aligned
 
+##now run gNB with this command
+```bash
+cd ~/srsRAN_Project/configs
+sudo gnb -c gnb_n3.yml
+```
 ## Conclusion
 
 This guide provides a complete step-by-step process to install a private 5G network using USRP, srsRAN, MongoDB, and Open5GS. Ensure all configurations are correct before testing UE connectivity.
